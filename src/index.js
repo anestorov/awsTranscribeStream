@@ -1,15 +1,17 @@
 
 
 import { TranscribeStreamingClient, StartStreamTranscriptionCommand, AudioEvent, AudioStream } from "@aws-sdk/client-transcribe-streaming"
+import {CognitoIdentityClient} from "@aws-sdk/client-cognito-identity"
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 
 const player = document.getElementById('player');
 
 const awsTranscribeClient = new TranscribeStreamingClient({
     region: "eu-central-1",
-    credentials: {
-        accessKeyId: "AKIAT67ABGWC473FPRYZ",
-        secretAccessKey: "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",
-    }
+    credentials:fromCognitoIdentityPool({
+        client: new CognitoIdentityClient({ region: "eu-central-1" }),
+        identityPoolId: "eu-central-1:4e20f92b-5754-430d-808c-c8e343c115cd" // IDENTITY_POOL_ID,
+    })
 });
 
 const handleSuccess = function (stream) {
